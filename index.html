@@ -24,13 +24,10 @@
       }
 
       .result {
-        width: 95%;
-        height: 60px;
-        background-color: #37474f;
+        width: 200px;
         color: #fff;
         font-size: 32px;
         padding: 10px;
-        box-sizing: border-box;
       }
 
       .button-row {
@@ -73,10 +70,20 @@
 
     <div class="container">
       <div class="result" id="result">0</div>
+
       <div class="button operator" onclick="appendOperator('-')">-</div>
       <div class="button operator" onclick="appendOperator('+')">+</div>
       <div class="button operator" onclick="appendOperator('*')">x</div>
       <div class="button operator" onclick="appendOperator('/')">/</div>
+      <div class="button operator" onclick="root()">&radic;</div>
+      <div class="button operator" onclick="power(2)">x&sup2</div>
+      <div class="button operator" onclick="absolute()">|x|</div>
+      <div class="button operator" onclick="oneDivide()">1/x</div>
+      <div class="button operator" onclick="factorial()">x!</div>
+      <div class="button operator" onclick="tenTimes()">10^x</div>
+      <div class="button operator" onclick="log()">log</div>
+      <div class="button operator" onclick="ln()">ln</div>
+
       <div class="button" onclick="clearResult()">AC</div>
       <div class="button" onclick="deleteLastCharacter()">DEL</div>
       <div class="button" onclick="appendNumber('1')">1</div>
@@ -89,6 +96,8 @@
       <div class="button" onclick="appendNumber('8')">8</div>
       <div class="button" onclick="appendNumber('9')">9</div>
       <div class="button" onclick="appendNumber('0')">0</div>
+      <div class="button" onclick="appendNumber('.')">.</div>
+
       <div class="button" onclick="calculateResult()">=</div>
     </div>
     <!-- special scripts for integration in MTW gallery - must be placed at the bottom of the HTML after your code -->
@@ -117,14 +126,85 @@
       });
 
       let currentExpression = "";
+      let currentNumber;
 
-      function appendNumber(number) {
-        currentExpression += number;
+      function oneDivide() {
+        result = 1 / currentExpression;
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
+      }
+      function power(num) {
+        result = Math.pow(currentExpression, num);
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
+        updateResult();
+      }
+      function log() {
+        result = Math.log10(currentExpression);
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
+        updateResult();
+      }
+      function ln() {
+        result = Math.log(currentExpression);
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
+        updateResult();
+      }
+      function tenTimes() {
+        result = Math.pow(10, currentExpression);
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
+      }
+
+      function factorial() {
+        result = rFact(currentExpression);
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
+      }
+      function rFact(num) {
+        if (num < 0) return 1;
+        if (num === 0) {
+          return 1;
+        } else {
+          return num * rFact(num - 1);
+        }
+      }
+
+      function root() {
+        result = Math.sqrt(currentExpression);
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
         updateResult();
       }
 
+      function absolute() {
+        result = Math.abs(currentExpression);
+        document.getElementById("result").innerText = result;
+        currentExpression = result.toString();
+        updateResult();
+      }
+      function appendNumber(number) {
+        currentExpression += number;
+        currentNumber = number;
+        updateResult();
+      }
+
+      function MS() {
+        document.getElementById("result").innerText = currentNumber;
+      }
+      function MC() {
+        document.getElementById("result").innerText = currentNumber;
+      }
+      function MPLUS() {
+        document.getElementById("result").innerText = currentNumber;
+      }
+      function MR() {
+        document.getElementById("result").innerText = currentNumber;
+      }
+
       function appendOperator(operator) {
-        currentExpression += " " + operator + " ";
+        currentExpression += operator;
         updateResult();
       }
 
