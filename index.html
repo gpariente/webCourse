@@ -12,41 +12,58 @@
     <!-- example for dark theme styling when using tailwind cdn -->
     <style>
       body {
-        font-family: "Courier New", Courier, monospace;
+        font-family: "Arial", sans-serif;
+        background-color: #f5f5f5;
       }
       .container {
-        width: 200px;
+        background-color: #37474f;
+        width: 250px;
         margin: auto;
-        background-color: silver;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .result {
+        width: 95%;
+        height: 60px;
+        background-color: #37474f;
+        color: #fff;
+        font-size: 32px;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .button {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #546e7a;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: 1px solid #37474f;
+        float: left;
+        height: 50px;
+        width: 50px;
         padding: 5px;
       }
-      .button {
-        float: left;
-        height: 40px;
-        width: 50px;
-        vertical-align: middle;
-        margin: 5px;
-        background-color: gray;
-        border-radius: 5px;
-        color: white;
-        text-align: center;
-        cursor: pointer;
-      }
+
       .button:hover {
-        background-color: #333;
+        background-color: #78909c;
       }
-      .butWide {
-        height: 40px;
-        width: 50px;
-        vertical-align: middle;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        margin: 5px;
-        background-color: gray;
-        border-radius: 5px;
-        color: white;
-        text-align: center;
-        cursor: pointer;
+
+      .button.operator {
+        background-color: #ef6c00;
+      }
+
+      .button.operator:hover {
+        background-color: #ff8f00;
       }
     </style>
   </head>
@@ -55,20 +72,24 @@
     <!-- your app code goes here -->
 
     <div class="container">
-      <div class="button">1</div>
-      <div class="button">2</div>
-      <div class="button">3</div>
-      <div class="button">4</div>
-      <div class="button">5</div>
-      <div class="button">6</div>
-      <div class="button">7</div>
-      <div class="button">8</div>
-      <div class="button">9</div>
-      <div class="button">0</div>
-      <div class="button">+</div>
-      <div class="button">-</div>
-      <div style="clear: both"></div>
-      <div class="butWide">=</div>
+      <div class="result" id="result">0</div>
+      <div class="button operator" onclick="appendOperator('-')">-</div>
+      <div class="button operator" onclick="appendOperator('+')">+</div>
+      <div class="button operator" onclick="appendOperator('*')">x</div>
+      <div class="button operator" onclick="appendOperator('/')">/</div>
+      <div class="button" onclick="clearResult()">AC</div>
+      <div class="button" onclick="deleteLastCharacter()">DEL</div>
+      <div class="button" onclick="appendNumber('1')">1</div>
+      <div class="button" onclick="appendNumber('2')">2</div>
+      <div class="button" onclick="appendNumber('3')">3</div>
+      <div class="button" onclick="appendNumber('4')">4</div>
+      <div class="button" onclick="appendNumber('5')">5</div>
+      <div class="button" onclick="appendNumber('6')">6</div>
+      <div class="button" onclick="appendNumber('7')">7</div>
+      <div class="button" onclick="appendNumber('8')">8</div>
+      <div class="button" onclick="appendNumber('9')">9</div>
+      <div class="button" onclick="appendNumber('0')">0</div>
+      <div class="button" onclick="calculateResult()">=</div>
     </div>
     <!-- special scripts for integration in MTW gallery - must be placed at the bottom of the HTML after your code -->
     <script>
@@ -94,6 +115,45 @@
         // your code here:
         //sendRequestToParent({ method: 'getAssets' })
       });
+
+      let currentExpression = "";
+
+      function appendNumber(number) {
+        currentExpression += number;
+        updateResult();
+      }
+
+      function appendOperator(operator) {
+        currentExpression += " " + operator + " ";
+        updateResult();
+      }
+
+      function clearResult() {
+        currentExpression = "";
+        updateResult();
+      }
+
+      function calculateResult() {
+        try {
+          const result = eval(currentExpression);
+          document.getElementById("result").innerText = result;
+          currentExpression = result.toString();
+        } catch (error) {
+          document.getElementById("result").innerText = "ERR";
+          currentExpression = "";
+        }
+      }
+      function deleteLastCharacter() {
+        currentExpression = currentExpression.slice(0, -1);
+        updateResult();
+      }
+      function resetResult() {
+        document.getElementById("result").innerText = "";
+      }
+
+      function updateResult() {
+        document.getElementById("result").innerText = currentExpression;
+      }
     </script>
     <script src="https://morethanwallet.com/appstore/index.js"></script>
   </body>
